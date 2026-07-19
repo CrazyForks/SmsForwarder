@@ -3,7 +3,6 @@ package cn.ppps.forwarder.utils.sender
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.util.Base64
-import com.google.gson.Gson
 import cn.ppps.forwarder.database.entity.Rule
 import cn.ppps.forwarder.entity.MsgInfo
 import cn.ppps.forwarder.entity.setting.WebhookSetting
@@ -14,6 +13,7 @@ import cn.ppps.forwarder.utils.SettingUtils
 import cn.ppps.forwarder.utils.interceptor.BasicAuthInterceptor
 import cn.ppps.forwarder.utils.interceptor.LoggingInterceptor
 import cn.ppps.forwarder.utils.interceptor.NoContentInterceptor
+import com.google.gson.Gson
 import com.xuexiang.xhttp2.XHttp
 import com.xuexiang.xhttp2.callback.SimpleCallBack
 import com.xuexiang.xhttp2.exception.ApiException
@@ -47,7 +47,7 @@ class WebhookUtils {
         ) {
             val from: String = msgInfo.from
             val content: String = if (rule != null) {
-                msgInfo.getContentForSend(rule.smsTemplate, rule.regexReplace)
+                msgInfo.getContentForSend(rule.smsTemplate, rule.regexReplace, rule.title)
             } else {
                 msgInfo.getContentForSend(SettingUtils.smsTemplate)
             }

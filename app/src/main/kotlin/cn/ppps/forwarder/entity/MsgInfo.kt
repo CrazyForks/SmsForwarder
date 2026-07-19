@@ -2,7 +2,6 @@ package cn.ppps.forwarder.entity
 
 import android.annotation.SuppressLint
 import android.text.TextUtils
-import com.google.gson.Gson
 import cn.ppps.forwarder.App
 import cn.ppps.forwarder.App.Companion.CALL_TYPE_MAP
 import cn.ppps.forwarder.R
@@ -16,6 +15,7 @@ import cn.ppps.forwarder.utils.SettingUtils.Companion.enableSmsTemplate
 import cn.ppps.forwarder.utils.SettingUtils.Companion.extraDeviceMark
 import cn.ppps.forwarder.utils.SettingUtils.Companion.smsTemplate
 import cn.ppps.forwarder.utils.task.TaskUtils
+import com.google.gson.Gson
 import com.xuexiang.xutil.net.NetworkUtils
 import com.xuexiang.xutil.resource.ResUtils.getString
 import java.io.Serializable
@@ -36,18 +36,21 @@ data class MsgInfo(
     var uid: Int = 0, //APP通知的UID
 ) : Serializable {
 
+    var ruleName: String = ""
+
     val titleForSend = getTitleForSend()
 
     val smsVoForSend = getContentForSend()
 
-    fun getTitleForSend(titleTemplate: String = "", regexReplace: String = ""): String {
+    fun getTitleForSend(titleTemplate: String = "", regexReplace: String = "", ruleTitle: String = ""): String {
+        this.ruleName = ruleTitle.replace("null", "")
         var template = titleTemplate.replace("null", "")
         if (TextUtils.isEmpty(template)) template = getString(R.string.tag_from)
-
         return replaceTemplate(template, regexReplace)
     }
 
-    fun getContentForSend(ruleSmsTemplate: String = "", regexReplace: String = ""): String {
+    fun getContentForSend(ruleSmsTemplate: String = "", regexReplace: String = "", ruleTitle: String = ""): String {
+        this.ruleName = ruleTitle.replace("null", "")
         var customSmsTemplate: String = getString(R.string.tag_from).toString() + "\n" +
                 getString(R.string.tag_sms) + "\n" +
                 getString(R.string.tag_card_slot) + "\n" +
@@ -89,6 +92,7 @@ data class MsgInfo(
             .replaceTag(getString(R.string.tag_card_subid), subId.toString(), encoderName)
             .replaceTag(getString(R.string.tag_title), simInfo, encoderName)
             .replaceTag(getString(R.string.tag_uid), uid.toString(), encoderName)
+            .replaceTag(getString(R.string.tag_rule_title), this.ruleName, encoderName)
             .replaceTag(
                 getString(R.string.tag_receive_time),
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date),
@@ -215,7 +219,7 @@ data class MsgInfo(
         return this.replaceTag(getString(R.string.tag_phone_area), phoneArea)
     }
 
-    //替换{{APP名称}}标签
+    //替换{{APP_NAME}}标签
     private fun String.replaceAppNameTag(packageName: String, encoderName: String = ""): String {
         if (TextUtils.isEmpty(this)) return this
         if (this.indexOf(getString(R.string.tag_app_name)) == -1) return this
@@ -246,7 +250,7 @@ data class MsgInfo(
         return this.replaceTag(getString(R.string.tag_app_name), appName)
     }
 
-    //替换 {{定位信息}} 标签
+    //替换{{LOCATION}}标签
     private fun String.replaceLocationTag(encoderName: String = ""): String {
         if (TextUtils.isEmpty(this)) return this
 

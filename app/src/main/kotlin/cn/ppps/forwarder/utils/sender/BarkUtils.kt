@@ -2,7 +2,6 @@ package cn.ppps.forwarder.utils.sender
 
 import android.text.TextUtils
 import android.util.Base64
-import com.google.gson.Gson
 import cn.ppps.forwarder.database.entity.Rule
 import cn.ppps.forwarder.entity.MsgInfo
 import cn.ppps.forwarder.entity.result.BarkResult
@@ -13,6 +12,7 @@ import cn.ppps.forwarder.utils.SendUtils
 import cn.ppps.forwarder.utils.SettingUtils
 import cn.ppps.forwarder.utils.interceptor.BasicAuthInterceptor
 import cn.ppps.forwarder.utils.interceptor.LoggingInterceptor
+import com.google.gson.Gson
 import com.xuexiang.xhttp2.XHttp
 import com.xuexiang.xhttp2.callback.SimpleCallBack
 import com.xuexiang.xhttp2.exception.ApiException
@@ -38,12 +38,12 @@ class BarkUtils {
         ) {
             //Log.i(TAG, "sendMsg setting:$setting msgInfo:$msgInfo rule:$rule senderIndex:$senderIndex logId:$logId msgId:$msgId")
             val title: String = if (rule != null) {
-                msgInfo.getTitleForSend(setting.title, rule.regexReplace)
+                msgInfo.getTitleForSend(setting.title, rule.regexReplace, rule.title)
             } else {
                 msgInfo.getTitleForSend(setting.title)
             }
             val content: String = if (rule != null) {
-                msgInfo.getContentForSend(rule.smsTemplate, rule.regexReplace)
+                msgInfo.getContentForSend(rule.smsTemplate, rule.regexReplace, rule.title)
             } else {
                 msgInfo.getContentForSend(SettingUtils.smsTemplate)
             }
