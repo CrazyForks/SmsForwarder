@@ -132,7 +132,8 @@ class FeishuUtils private constructor() {
                             .replace("{{MSG_TITLE}}", jsonInnerStr(title))
                             .replace("{{MSG_TIME}}", msgTime)
                             .replace("{{MSG_FROM}}", jsonInnerStr(from))
-                            .replace("{{MSG_CONTENT}}", jsonInnerStr(if (atLarkMd.isNotEmpty()) "$atLarkMd\n$content" else content))
+                            .replace("{{MSG_CONTENT}}", jsonInnerStr(if (atLarkMd.isNotEmpty()) "$atLarkMd\n$content" else content)),
+                        rule?.title ?: ""
                     )
                     requestMsg = Gson().toJson(msgMap)
                 }

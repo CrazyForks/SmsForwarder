@@ -71,7 +71,7 @@ class BarkUtils {
             if (!TextUtils.isEmpty(setting.sound)) msgMap["sound"] = setting.sound
             if (!TextUtils.isEmpty(setting.badge)) msgMap["badge"] = setting.badge
             if (!TextUtils.isEmpty(setting.url)) {
-                val replacedUrl = msgInfo.getContentForSend(setting.url)
+                val replacedUrl = msgInfo.getContentForSend(setting.url, "", rule?.title ?: "")
                 msgMap["url"] = replacedUrl
             }
 
@@ -89,7 +89,7 @@ class BarkUtils {
                     }
                 }
             } else {
-                msgMap["copy"] = msgInfo.getContentForSend(setting.autoCopy)
+                msgMap["copy"] = msgInfo.getContentForSend(setting.autoCopy, "", rule?.title ?: "")
                 msgMap["autoCopy"] = 1
             }
 

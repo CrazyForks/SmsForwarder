@@ -28,7 +28,7 @@ class GotifyUtils {
             msgId: Long = 0L
         ) {
             val title: String = if (rule != null) {
-                msgInfo.getTitleForSend(setting.title, rule.regexReplace)
+                msgInfo.getTitleForSend(setting.title, rule.regexReplace, rule.title)
             } else {
                 msgInfo.getTitleForSend(setting.title)
             }

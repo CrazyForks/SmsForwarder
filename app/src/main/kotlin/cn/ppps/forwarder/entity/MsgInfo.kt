@@ -36,21 +36,17 @@ data class MsgInfo(
     var uid: Int = 0, //APP通知的UID
 ) : Serializable {
 
-    var ruleName: String = ""
-
     val titleForSend = getTitleForSend()
 
     val smsVoForSend = getContentForSend()
 
     fun getTitleForSend(titleTemplate: String = "", regexReplace: String = "", ruleTitle: String = ""): String {
-        this.ruleName = ruleTitle.replace("null", "")
         var template = titleTemplate.replace("null", "")
         if (TextUtils.isEmpty(template)) template = getString(R.string.tag_from)
-        return replaceTemplate(template, regexReplace)
+        return replaceTemplate(template, regexReplace, "", ruleTitle)
     }
 
     fun getContentForSend(ruleSmsTemplate: String = "", regexReplace: String = "", ruleTitle: String = ""): String {
-        this.ruleName = ruleTitle.replace("null", "")
         var customSmsTemplate: String = getString(R.string.tag_from).toString() + "\n" +
                 getString(R.string.tag_sms) + "\n" +
                 getString(R.string.tag_card_slot) + "\n" +
@@ -73,17 +69,17 @@ data class MsgInfo(
             }
         }
 
-        return replaceTemplate(customSmsTemplate, regexReplace)
+        return replaceTemplate(customSmsTemplate, regexReplace, "", ruleTitle)
     }
 
-    fun getContentFromJson(jsonTemplate: String): String {
+    fun getContentFromJson(jsonTemplate: String, ruleTitle: String = ""): String {
         var template = jsonTemplate.replace("null", "")
         if (TextUtils.isEmpty(template)) template = getString(R.string.tag_from)
-        return replaceTemplate(template, "", "Gson")
+        return replaceTemplate(template, "", "Gson", ruleTitle)
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun replaceTemplate(template: String, regexReplace: String = "", encoderName: String = ""): String {
+    fun replaceTemplate(template: String, regexReplace: String = "", encoderName: String = "", ruleTitle: String = ""): String {
         return template.replaceTag(getString(R.string.tag_from), from, encoderName)
             .replaceTag(getString(R.string.tag_package_name), from, encoderName)
             .replaceTag(getString(R.string.tag_sms), content, encoderName)
@@ -92,7 +88,7 @@ data class MsgInfo(
             .replaceTag(getString(R.string.tag_card_subid), subId.toString(), encoderName)
             .replaceTag(getString(R.string.tag_title), simInfo, encoderName)
             .replaceTag(getString(R.string.tag_uid), uid.toString(), encoderName)
-            .replaceTag(getString(R.string.tag_rule_title), this.ruleName, encoderName)
+            .replaceTag(getString(R.string.tag_rule_title), ruleTitle.replace("null", ""), encoderName)
             .replaceTag(
                 getString(R.string.tag_receive_time),
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date),

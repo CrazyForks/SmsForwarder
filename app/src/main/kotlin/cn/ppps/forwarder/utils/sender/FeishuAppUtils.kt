@@ -114,7 +114,8 @@ class FeishuAppUtils private constructor() {
                         setting.messageCard.trimIndent()
                             .replace("{{MSG_TITLE}}", jsonInnerStr(title))
                             .replace("{{MSG_URL}}", jsonInnerStr("https://github.com/pppscn/SmsForwarder"))
-                            .replace("{{MSG_CONTENT}}", jsonInnerStr(content))
+                            .replace("{{MSG_CONTENT}}", jsonInnerStr(content)),
+                        rule?.title ?: ""
                     )
                 }
             } else {

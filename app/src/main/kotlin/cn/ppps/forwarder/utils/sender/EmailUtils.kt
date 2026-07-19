@@ -39,7 +39,7 @@ class EmailUtils {
             msgId: Long = 0L
         ) {
             val title: String = if (rule != null) {
-                msgInfo.getTitleForSend(setting.title, rule.regexReplace)
+                msgInfo.getTitleForSend(setting.title, rule.regexReplace, rule.title)
             } else {
                 msgInfo.getTitleForSend(setting.title)
             }
@@ -144,7 +144,7 @@ class EmailUtils {
                         val fromAlias = setting.fromEmailAlias.ifEmpty {
                             setting.fromEmail
                         }
-                        val nickname = msgInfo.getTitleForSend(setting.nickname)
+                        val nickname = msgInfo.getTitleForSend(setting.nickname, "", rule?.title ?: "")
                         setting.recipients.ifEmpty {
                             //兼容旧的设置
                             val emails = setting.toEmail.replace("[,，;；]".toRegex(), ",").trim(',').split(',')
